@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title></title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-8691406134231910",
+        enable_page_level_ads: true
+      });
+    </script>
+
+</head>
+
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">WEB安全——CSRF攻击</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">WEB安全——CSRF攻击</h1>
+        <div class="stuff">
+            <span>五月 12, 2018</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/WEB/">WEB</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/安全/">安全</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/记录/">记录</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p><img src="/article-img/csrf/csrfimg1.jpg" alt=""></p>
+<p>《我是谁，没有绝对安全的系统》这部电影中有一句经典台词：</p>
+<blockquote>
+<p>人不能总藏在计算机后面，最大的安全漏洞并不是存在于程序或者服务器内，而是人类 ；                                                                                                                                                      </p>
+</blockquote>
+<h2 id="什么是CSRF攻击？"><a href="#什么是CSRF攻击？" class="headerlink" title="什么是CSRF攻击？"></a>什么是CSRF攻击？</h2><p>CSRF是一种web上的攻击手法，全称是Cross Site Request Forgery，跨站伪造请求；不要与XSS，也就是跨站脚本攻击搞混，这是两种不同的东西；</p>
+<h2 id="CSRF攻击的基本原理是什么？"><a href="#CSRF攻击的基本原理是什么？" class="headerlink" title="CSRF攻击的基本原理是什么？"></a>CSRF攻击的基本原理是什么？</h2><p>攻击者构造目标网站的某个功能接口的请求地址，然后诱导该网站的已授权已登陆用户去点击这个伪造的地址或者让它自动加载（比方说弄成一张图片，src就是这个伪造的地址），由于用户已登陆，浏览器就可以获取到相对应的授权票据（比方说cookie）然后发送请求到服务端，服务端接收到请求后会误以为是用户的合法操作，从而允许这些伪造的请求对系统进行非法修改，达到攻击的目的；此外，这一系列操作都可以在用户不知情的情况下完成，使csrf一时间难以被发现；</p>
+<p>太难懂？没关系，我们将通过例子来分析：</p>
+<h4 id="1-首先第一步，伪造目标网站的某个功能接口的请求地址"><a href="#1-首先第一步，伪造目标网站的某个功能接口的请求地址" class="headerlink" title="1. 首先第一步，伪造目标网站的某个功能接口的请求地址"></a>1. 首先第一步，伪造目标网站的某个功能接口的请求地址</h4><p>在伪造地址之前，首先我们得要弄清楚目标URL的格式是什么，如小方无意中发现某直播平台送礼物的接口是一个GET请求：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//zhibo.com/gift/send?targetId=personId&amp;giftId=giftId</span></span><br></pre></td></tr></table></figure>
+<p>于是小方伪造了如下的地址：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//zhibo.com/gift/send?targetId=xiaoFangId&amp;giftId=rocketId</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-诱导该网站的已授权已登陆用户去点击这个伪造的地址"><a href="#2-诱导该网站的已授权已登陆用户去点击这个伪造的地址" class="headerlink" title="2. 诱导该网站的已授权已登陆用户去点击这个伪造的地址"></a>2. 诱导该网站的已授权已登陆用户去点击这个伪造的地址</h4><p>是不是有点蒙？我怎么可能随便乱点击这些来历不明的网址呢？没错，但是如果是下面这样呢？</p>
+<p><img src="/article-img/csrf/a.png" alt=""></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">header</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"http://xxx/head.jpg"</span> <span class="attr">alt</span>=<span class="string">"头像"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>欧洲10日游机票免费抢<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://zhibo.com/gift/send?targetId=xiaoFangId&amp;giftId=rocketId"</span>&gt;</span>立即抢票<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>小方写了一个恶意网站，把自己伪造的地址放入到链接中，只要一点击就立马可以发送请求；</p>
+<p>小方想到了自己的下床舍友小李是这个直播平台的死粉，经常泡平台上面，于是将该网站分享给小李，这时候谁还能保证小李一定不点击这个恶意的链接呢？</p>
+<p>小李点击之后，就会发送一个伪造的请求，且由于小李经常泡平台，浏览器保存着他的身份验证信息cookie，所以浏览器也会将cookie一并发送出去；</p>
+<p>服务端接受到请求后检查相关信息，确认是小李没错，于是就执行了相对应的操作，把礼物送给了小方；</p>
+<h4 id="3-使攻击神不知鬼不觉"><a href="#3-使攻击神不知鬼不觉" class="headerlink" title="3. 使攻击神不知鬼不觉"></a>3. 使攻击神不知鬼不觉</h4><p>我刚接触CSRF的时候会有疑问，这样不就连过去直播平台了？不就立马被发现了？没错，但是如果稍微改动一下，像下面这样呢？</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">header</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"http://xxx/head.jpg"</span> <span class="attr">alt</span>=<span class="string">"头像"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"https://zhibo.com/gift/send?targetId=xiaoFangId&amp;giftId=rocketId"</span> <span class="attr">width</span>=<span class="string">'0'</span>     <span class="attr">height</span>=<span class="string">'0'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>欧洲10日游机票免费抢<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://travelwebsite.com"</span>&gt;</span>立即抢票<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这次我们将伪造的地址放入一张图片的src中，并设置宽高为0，只要小李一打开这个恶意网站，甚至不用操作什么，就将一个伪造的赠送礼物请求给发送出去；</p>
+<h4 id="4-POST请求同样无法幸免"><a href="#4-POST请求同样无法幸免" class="headerlink" title="4. POST请求同样无法幸免"></a>4. POST请求同样无法幸免</h4><p>现在把GET请求改成POST请求，这样不就无法通过<code>&lt;a&gt;</code> 或是 <code>&lt;img&gt;</code> 来攻击了吗？没错，但是如果像下面这样呢？</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"https://zhibo.com/gift/send?targetId=xiaoFangId&amp;giftId=rocketId"</span> <span class="attr">method</span>=<span class="string">"POST"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"id"</span> <span class="attr">value</span>=<span class="string">"3"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"立即抢票"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>小李点下去之后，同样会被攻击，但是这样不就被发现了吗？没错，但是我们继续修改代码像下面这样呢？</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">style</span>=<span class="string">"display:none"</span> <span class="attr">name</span>=<span class="string">"csrf-frame"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">'POST'</span> <span class="attr">action</span>=<span class="string">'https://zhibo.com/gift/send?targetId=xiaoFangId&amp;giftId=rocketId'</span> <span class="attr">target</span>=<span class="string">"csrf-frame"</span> <span class="attr">id</span>=<span class="string">"csrf-form"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">'hidden'</span> <span class="attr">name</span>=<span class="string">'id'</span> <span class="attr">value</span>=<span class="string">'3'</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">'submit'</span> <span class="attr">value</span>=<span class="string">'submit'</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"><span class="built_in">document</span>.getElementById(<span class="string">"csrf-form"</span>).submit()</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这里我们用到了一个form标签的target属性，该属性规定了在何处打开action中的页面；</p>
+<p>小方创建一个隐藏的iframe和一个表单，设置表单的target属性指向这个隐藏的iframe，也就是说action中跳转的页面会在这个隐藏的iframe中打开，同时通过脚本控制表单自动提交，小李只需打开恶意网站，无需其他操作就在毫不知情的情况下被攻击了；</p>
+<p>上面就是CSRF攻击的一般原理；</p>
+<p>弄清楚了攻击者的攻击方式和手段，接下来该采取应对措施了；</p>
+<h2 id="如何防御CSRF攻击？"><a href="#如何防御CSRF攻击？" class="headerlink" title="如何防御CSRF攻击？"></a>如何防御CSRF攻击？</h2><p><img src="/article-img/csrf/b.jpg" alt=""></p>
+<p>如何防御SCRF攻击，我们可以分别从不同的角度去分析并寻找防御的措施：</p>
+<h3 id="1-用户角度："><a href="#1-用户角度：" class="headerlink" title="1. 用户角度："></a>1. 用户角度：</h3><p>从用户的角度去看，CSRF攻击之所以能够成立，是因为使用者在某个目标网站已经处于登陆的状态，所以才能做出一些授权后的行为；虽说这些攻击应该由网站那边处理，但如果我们真的很怕，怕网站处理不好的话，我们可以在每次使用完网站之后就登出注销掉，这样就可以避免CSRF；</p>
+<p>但显然，这样的处理是远远不够的，而且还会造成非常不好的用户体验；真正该做事的，应该是服务端。</p>
+<h3 id="2-服务端角度："><a href="#2-服务端角度：" class="headerlink" title="2. 服务端角度："></a>2. 服务端角度：</h3><p>CSRF之所以可怕是因为CS两个字：跨站，也就是说攻击者可以在任何一个网址底下发起攻击；那么我们防御就可以从这个角度入手：<strong>我们要怎么挡住从别的网址（别的域）发来的请求；</strong></p>
+<p>那要怎么挡呢？首先我们仔细想想：CSRF的请求和我们本人发出的真实请求，有什么区别？区别就在于域的不同，所以我们可以去检查这个域是不是从我们自己的域所发出的；</p>
+<h4 id="1-检查referer字段："><a href="#1-检查referer字段：" class="headerlink" title="1. 检查referer字段："></a>1. 检查referer字段：</h4><p>request的头部中有一个叫referer的字段，表示这个请求是从哪个地方发来的，所以我们可以检查这个字段的值是不是合法的，不是的话我们就拒绝掉；</p>
+<p>但是这种检查方式会存在三个问题：</p>
+<ul>
+<li><p>第一个有可能浏览器发出的请求，根本就不带referer字段，为什么会这样呢？因为referer字段表示一个请求是从哪里链接过来，如果这个请求不是由链接触发产生比方说直接在浏览器中输入这个请求地址，那么这种请求是不会包含referer字段的，因为它是直接产生的而不是从某个地方链接过去的；</p>
+</li>
+<li><p>第二个由于referer字段可能会带有某些私人信息，用户不希望泄露出去，于是通过设置浏览器的参数，禁止发送referer这个字段，比方说Firefox火狐；</p>
+</li>
+<li><p>第三个，要确保我们判断referer是否合法的代码没有bug，这是什么意思呢？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> referer = request.headers.referer;</span><br><span class="line"><span class="keyword">if</span> (referer.indexOf(<span class="string">'a.com'</span>) &gt; <span class="number">-1</span>) &#123;</span><br><span class="line">  <span class="comment">// pass</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>比方说我们的域名是a.com，然后我们仅仅检查拿到的referer字段是否含有 <code>a.com</code> 这个串，这时候问题就来了，如果攻击方的域名是a.com.b.com，那么我们的防御就无效了；</p>
+<p>所以仅仅检查referer并不是一个很完善的方案；</p>
+</li>
+</ul>
+<h4 id="2-图片验证码-手机验证码-邮箱验证码"><a href="#2-图片验证码-手机验证码-邮箱验证码" class="headerlink" title="2. 图片验证码/手机验证码/邮箱验证码"></a>2. 图片验证码/手机验证码/邮箱验证码</h4><p>这种防御手段可以有效的避免CSRF，因为攻击者无法获知验证码是多少，所以也就无法进行下一步操作；</p>
+<p>这是一个理论上很完善的解决方案，但它在实际的场景中也存在问题，比方说在银行之类的安全度很高的系统中可以采用这种方案，但如果是普通的后台管理员每添加/删除一个用户要输入一次验证码，每一步操作都要输入验证码的话，明显降低用户体验；</p>
+<h4 id="3-加上csrf-token"><a href="#3-加上csrf-token" class="headerlink" title="3. 加上csrf token"></a>3. 加上csrf token</h4><p>和验证码相类似，要防止csrf攻击，我们只要<strong>确保某些信息只有使用者本人知道就可以了</strong> ，那要怎么做呢？我们可以加入一个csrf token；</p>
+<p>这个token由服务器随机产生， 存在session中，并且每一段不同的session就要更换一次token，然后发送给前端保管；前端在发送请求的时候把这个token也带上，这样一来服务端就可以对比前端发来的这个token与自己存的那个是不是一样，一样的话就代表是用户本人发出的，不一样的话就说明这个请求有问题了；</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"https://zhibo.com/gift/send?targetId=xiaoFangId&amp;giftId=rocketId"</span> <span class="attr">method</span>=<span class="string">"POST"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"id"</span> <span class="attr">value</span>=<span class="string">"3"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"csrftoken"</span> <span class="attr">value</span>=<span class="string">"fj1iro2jro12ijoi1"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"赠送礼物"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面只是其中的一种方式，只要我们能把csrf token带上给服务器验证就可以；</p>
+<p>我刚开始接触csrf这个概念的时候，这里就有点小疑问，既然你说csrf连cookie都可以带上，这个token不也一样可以带上发送吗？</p>
+<p>这里要弄明白一点是，cookie是浏览器给带上去的，而这个token是我们自己的网站前端给加上去的，当攻击者进行攻击时，他是伪造一个恶意网站伪造一个URL然后直接访问服务器，它不经过我们的前端代码，所以也就不会带上这个csrf token；</p>
+<p>那既然攻击者无法像cookie那样利用我们的token，又不知道token的值是多少，也就无法通过服务器的验证，从而无法实施攻击；</p>
+<h4 id="4-Double-Submit-Cookie（双重提交cookie）"><a href="#4-Double-Submit-Cookie（双重提交cookie）" class="headerlink" title="4. Double Submit Cookie（双重提交cookie）"></a>4. Double Submit Cookie（双重提交cookie）</h4><p>这种方案有两种实现方式：</p>
+<ol>
+<li><p>第一种与上一个类似，服务器产生一组随机的token然后告诉前端，不同点在于这种方法不需要服务器将token记录下来，而是让客户端设置一个名叫csrf token的cookie，这个值同样刚刚的那个token；</p>
+</li>
+<li><p>第二种则根本不用服务器来新增接口代码来产生这个token，直接前端随机生成，然后把值写进cookie和form  </p>
+<p>中；</p>
+</li>
+</ol>
+<p>当用户本人发送请求时，cookie中会带有这个token，form中同样也会带有这个token，这样一来服务器就可以对比cookie中的token和form中的token，检查是否有值并且相等，就可以知道请求是不是用户本人发出；</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: csrftoken=fj1iro2jro12ijoi1</span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"https://zhibo.com/gift/send?targetId=xiaoFangId&amp;giftId=rocketId"</span> <span class="attr">method</span>=<span class="string">"POST"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"id"</span> <span class="attr">value</span>=<span class="string">"3"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"csrftoken"</span> <span class="attr">value</span>=<span class="string">"fj1iro2jro12ijoi1"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"赠送礼物"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>对于攻击者，他仍然无法知道这个csrf token值是多少，因此也就无法实施攻击；</p>
+<p>在我学习的过程中，这里存在着三个问题：</p>
+<ol>
+<li><h5 id="刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；"><a href="#刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；" class="headerlink" title="刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；"></a>刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；</h5><p>我们要知道虽然攻击者利用了我们的cookie，但他仅仅只是借助浏览器来给他伪造的请求加上cookie，由于同源策略的限制，他并不能获取到cookie的内容；简而言之，攻击者只能使用它，却不知道它是什么；</p>
+</li>
+</ol>
+<ol start="2">
+<li><h5 id="既然攻击者不知道token是多少，那他自己随机生成一个，把form和cookie中的token值换成他自己的，这样不也可以吗？"><a href="#既然攻击者不知道token是多少，那他自己随机生成一个，把form和cookie中的token值换成他自己的，这样不也可以吗？" class="headerlink" title="既然攻击者不知道token是多少，那他自己随机生成一个，把form和cookie中的token值换成他自己的，这样不也可以吗？"></a>既然攻击者不知道token是多少，那他自己随机生成一个，把form和cookie中的token值换成他自己的，这样不也可以吗？</h5><p>这个问题还是对同源策略不理解所造成的，和问题1类似，由于同源策略的限制，攻击者最多也只能在他的恶意网站上伪造一个form并随便填入一个token，但却不能读写目标网站的cookie值，既不能读又不能写cookie，胡乱猜一个form表单的token又有什么用呢？所以也无法实施攻击；</p>
+</li>
+</ol>
+<ol start="3">
+<li><p><strong>既然你说到同源策略，浏览器同源策略的目的就是为了防止跨域，那你这个csrf还怎么还能进行跨站请求呢？同源策略不会把它给拦住吗？其实这里存在着一个对同源策略的误解，包括我看网上的一些资料，都说到同源策略就是限制住让客户端不能发送请求，这是不对的！</strong></p>
+<p>同源策略下，浏览器仍然能够正常跨域发送请求，服务器也仍然能够正常处理请求并返回响应，只是返回结果被浏览器给拦截住了，并不是说不能够发送请求；</p>
+<p><strong>很显然，这对于csrf攻击来说，就已经足够了；</strong></p>
+</li>
+</ol>
+<p>所以明白为什么token值可以在前端生成了吧？因为这个token只是为了不让攻击者猜出；所以由 client 還是由 server 來生成都是一样的，只要确保不被猜出來即可。</p>
+<p>什么？小方想要利用我们的cookie？没关系随便用；</p>
+<p>什么？小方想知道我们的token值是什么？抱歉他做不到，除非猜个一两年；</p>
+<p>什么？小方想在他的恶意网站上操作修改这个token？抱歉，做梦！</p>
+<p>OK回到正题，刚刚我们说的这种双提交cookie同样有不足，它必须完全确保所有子域的安全，否则如果攻击者一旦掌握了底下的任意一个子域，那么cookie就可以被随意操作了；</p>
+<h3 id="浏览器的角度"><a href="#浏览器的角度" class="headerlink" title="浏览器的角度"></a>浏览器的角度</h3><p><img src="/article-img/csrf/c.jpg" alt=""></p>
+<p>上面分别从用户和服务器的角度去分析了解决方案，但是在csrf攻击中，我们的浏览器不仅参与进来了，而且还扮演着非常重要的角色，那么能不能从浏览器的角度去分析并解决问题呢？</p>
+<p>答案是可以，而且不仅仅已经有了解决方案，使用的方式也非常简单；</p>
+<p>从Chrome的51版本，Opera的39版本以及Firefox的60版本开始，正式支持SameSite Cookie功能，以降低CSRF的风险，说白了就是在cookie的后面多加一个SameSite属性，如：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: session_id=ewfewjf23o1; SameSite</span><br></pre></td></tr></table></figure>
+<p>这样就完成了这个csrf的防御；</p>
+<p>我们来看一下这个SameSite属性，他有两种模式：</p>
+<ul>
+<li><strong>SameSite=Strict：</strong> 处于严格模式下，任何跨域请求都不会携带cookie；<ul>
+<li>优点：可以说是完全拦截了csrf；</li>
+<li>缺点：会造成不便，直接从地址栏输入URL或者是从朋友分享的链接进入网站，这种情况下浏览器也不会带上cookie，所以我们是处于登出状态的，防护强度虽然高，但显然给我们造成一些麻烦；</li>
+<li>解决方案：<ul>
+<li>第一种是像亚马孙一样，准备两组不同的cookie，第一组让我们维持登陆状态，第二组则是做一些敏感操作时会用到的（比方说购买，转账，修改密码等）；第一组不设置SameSite，所以无论从哪边进入都会是登入状态，攻击者即使有这组cookie也不能干什么对吧；第二组敏感操作的cookie设置SameSite，攻击者无法获取这组cookie，也就不能实施有效的攻击了；</li>
+<li>第二种我们可以使用另外一种模式——Lax模式；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>SameSite=Lax：</strong> <ul>
+<li>优点：保持了弹性，放宽了一些限制，这个限制主要是对GET而言的，也就是说GET请求还是可以带上cookie，让我们再进入网站时候还是能够保持着登录状态；</li>
+<li>缺点：没有办法拦截GET形式的CSRF，这个需要我们注意；</li>
+</ul>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章介绍了CSRF是什么，其攻原理及防御手段，并举了一些常见的场景应用，希望自己在以后的开发中能够更加注重安全这一块，提高自己的安全意识水平。</p>
+<p>在学习这个知识点的时候，我也查找了不少的资料，但很多都大同小异，而且对于我个人而言，觉得有些牵扯到的知识点并没有解释得很明白，所以我也不断地再去扩展补充这些相关的知识点，想要更加深入地去了解为什么和怎么做，而不仅仅停留在是什么这一层面，所以如果文章中有表述不清或者是讲错的地方，也希望各位能够给我留言指出我的错误。</p>
+<p>那么我在介绍CSRF的同时，也将我个人在学习过程中所遇到的一些疑问给大家分享出来，这些疑问有可能是非常简单的细节问题，但我还是分享出来，希望能够帮到和我有同样疑问的你们！</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="https://zhuanlan.zhihu.com/p/22521378" target="_blank" rel="noopener">「每日一题」CSRF 是什么？</a> </li>
+<li><a href="https://blog.techbridge.cc/2017/02/25/csrf-introduction/" target="_blank" rel="noopener">讓我們來談談 CSRF</a> </li>
+<li><a href="http://stackoverflow.com/questions/17940811/example-of-silently-submitting-a-post-form-csrf" target="_blank" rel="noopener">Example of silently submitting a POST FORM (CSRF)</a> </li>
+<li><a href="http://bobao.360.cn/learning/detail/2844.html" target="_blank" rel="noopener">再见，CSRF：讲解set-cookie中的SameSite属性</a></li>
+</ol>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                    
+                        <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='a26a05530183d2e79aa9'
+        data-cs='c2af8561ca91dddff6b07ed0a55429dc2e230f60'
+        data-r='Tulyon.github.io'
+        data-o='Tulyon'
+        data-a='Tulyon'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
