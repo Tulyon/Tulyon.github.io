@@ -11,9 +11,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="你好，请多指教。
-
-"> 
+    <meta name="description" content="
+什么是三次握手？TCP建立连接的过程叫做握手，三次握手，指的是TCP在建立连接的过程中客户端和服务器之间交换了三个报文段。规范文档表述为 “ three way handshake ” ，准确来说,"> 
     <meta name="author" content="John Doe"> 
     <link rel="alternative" href="atom.xml" title="" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -68,6 +67,7 @@
 <p>人不能总藏在计算机后面，最大的安全漏洞并不是存在于程序或者服务器内，而是人类 ；                                                                                                                                                      </p>
 </blockquote>
 <h2 id="什么是CSRF攻击？"><a href="#什么是CSRF攻击？" class="headerlink" title="什么是CSRF攻击？"></a>什么是CSRF攻击？</h2><p>CSRF是一种web上的攻击手法，全称是Cross Site Request Forgery，跨站伪造请求；不要与XSS，也就是跨站脚本攻击搞混，这是两种不同的东西；</p>
+<p><img src="/article-img/csrf/sp.png" alt=""></p>
 <h2 id="CSRF攻击的基本原理是什么？"><a href="#CSRF攻击的基本原理是什么？" class="headerlink" title="CSRF攻击的基本原理是什么？"></a>CSRF攻击的基本原理是什么？</h2><p>攻击者构造目标网站的某个功能接口的请求地址，然后诱导该网站的已授权已登陆用户去点击这个伪造的地址或者让它自动加载（比方说弄成一张图片，src就是这个伪造的地址），由于用户已登陆，浏览器就可以获取到相对应的授权票据（比方说cookie）然后发送请求到服务端，服务端接收到请求后会误以为是用户的合法操作，从而允许这些伪造的请求对系统进行非法修改，达到攻击的目的；此外，这一系列操作都可以在用户不知情的情况下完成，使csrf一时间难以被发现；</p>
 <p>太难懂？没关系，我们将通过例子来分析：</p>
 <h4 id="1-首先第一步，伪造目标网站的某个功能接口的请求地址"><a href="#1-首先第一步，伪造目标网站的某个功能接口的请求地址" class="headerlink" title="1. 首先第一步，伪造目标网站的某个功能接口的请求地址"></a>1. 首先第一步，伪造目标网站的某个功能接口的请求地址</h4><p>在伪造地址之前，首先我们得要弄清楚目标URL的格式是什么，如小方无意中发现某直播平台送礼物的接口是一个GET请求：</p>
@@ -92,6 +92,7 @@
 <p>小方创建一个隐藏的iframe和一个表单，设置表单的target属性指向这个隐藏的iframe，也就是说action中跳转的页面会在这个隐藏的iframe中打开，同时通过脚本控制表单自动提交，小李只需打开恶意网站，无需其他操作就在毫不知情的情况下被攻击了；</p>
 <p>上面就是CSRF攻击的一般原理；</p>
 <p>弄清楚了攻击者的攻击方式和手段，接下来该采取应对措施了；</p>
+<p><img src="/article-img/csrf/p.png" alt=""></p>
 <h2 id="如何防御CSRF攻击？"><a href="#如何防御CSRF攻击？" class="headerlink" title="如何防御CSRF攻击？"></a>如何防御CSRF攻击？</h2><p><img src="/article-img/csrf/b.jpg" alt=""></p>
 <p>如何防御SCRF攻击，我们可以分别从不同的角度去分析并寻找防御的措施：</p>
 <h3 id="1-用户角度："><a href="#1-用户角度：" class="headerlink" title="1. 用户角度："></a>1. 用户角度：</h3><p>从用户的角度去看，CSRF攻击之所以能够成立，是因为使用者在某个目标网站已经处于登陆的状态，所以才能做出一些授权后的行为；虽说这些攻击应该由网站那边处理，但如果我们真的很怕，怕网站处理不好的话，我们可以在每次使用完网站之后就登出注销掉，这样就可以避免CSRF；</p>
@@ -131,6 +132,7 @@
 <p>当用户本人发送请求时，cookie中会带有这个token，form中同样也会带有这个token，这样一来服务器就可以对比cookie中的token和form中的token，检查是否有值并且相等，就可以知道请求是不是用户本人发出；</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: csrftoken=fj1iro2jro12ijoi1</span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"https://zhibo.com/gift/send?targetId=xiaoFangId&amp;giftId=rocketId"</span> <span class="attr">method</span>=<span class="string">"POST"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"id"</span> <span class="attr">value</span>=<span class="string">"3"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"csrftoken"</span> <span class="attr">value</span>=<span class="string">"fj1iro2jro12ijoi1"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"赠送礼物"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>对于攻击者，他仍然无法知道这个csrf token值是多少，因此也就无法实施攻击；</p>
+<p><img src="/article-img/csrf/ssp.png" alt=""></p>
 <p>在我学习的过程中，这里存在着三个问题：</p>
 <ol>
 <li><h5 id="刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；"><a href="#刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；" class="headerlink" title="刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；"></a>刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；</h5><p>我们要知道虽然攻击者利用了我们的cookie，但他仅仅只是借助浏览器来给他伪造的请求加上cookie，由于同源策略的限制，他并不能获取到cookie的内容；简而言之，攻击者只能使用它，却不知道它是什么；</p>
@@ -151,6 +153,7 @@
 <p>什么？小方想知道我们的token值是什么？抱歉他做不到，除非猜个一两年；</p>
 <p>什么？小方想在他的恶意网站上操作修改这个token？抱歉，做梦！</p>
 <p>OK回到正题，刚刚我们说的这种双提交cookie同样有不足，它必须完全确保所有子域的安全，否则如果攻击者一旦掌握了底下的任意一个子域，那么cookie就可以被随意操作了；</p>
+<p><img src="/article-img/csrf/ssp.png" alt=""></p>
 <h3 id="浏览器的角度"><a href="#浏览器的角度" class="headerlink" title="浏览器的角度"></a>浏览器的角度</h3><p><img src="/article-img/csrf/c.jpg" alt=""></p>
 <p>上面分别从用户和服务器的角度去分析了解决方案，但是在csrf攻击中，我们的浏览器不仅参与进来了，而且还扮演着非常重要的角色，那么能不能从浏览器的角度去分析并解决问题呢？</p>
 <p>答案是可以，而且不仅仅已经有了解决方案，使用的方式也非常简单；</p>
@@ -175,6 +178,7 @@
 </ul>
 </li>
 </ul>
+<p><img src="/article-img/csrf/sp.png" alt=""></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章介绍了CSRF是什么，其攻原理及防御手段，并举了一些常见的场景应用，希望自己在以后的开发中能够更加注重安全这一块，提高自己的安全意识水平。</p>
 <p>在学习这个知识点的时候，我也查找了不少的资料，但很多都大同小异，而且对于我个人而言，觉得有些牵扯到的知识点并没有解释得很明白，所以我也不断地再去扩展补充这些相关的知识点，想要更加深入地去了解为什么和怎么做，而不仅仅停留在是什么这一层面，所以如果文章中有表述不清或者是讲错的地方，也希望各位能够给我留言指出我的错误。</p>
 <p>那么我在介绍CSRF的同时，也将我个人在学习过程中所遇到的一些疑问给大家分享出来，这些疑问有可能是非常简单的细节问题，但我还是分享出来，希望能够帮到和我有同样疑问的你们！</p>

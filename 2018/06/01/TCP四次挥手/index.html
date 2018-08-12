@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title></title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="
+什么是三次握手？TCP建立连接的过程叫做握手，三次握手，指的是TCP在建立连接的过程中客户端和服务器之间交换了三个报文段。规范文档表述为 “ three way handshake ” ，准确来说,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-8691406134231910",
+        enable_page_level_ads: true
+      });
+    </script>
+
+</head>
+
+<body class="loading">
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">TCP杂文——我所理解的TCP四次挥手</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">TCP杂文——我所理解的TCP四次挥手</h1>
+        <div class="stuff">
+            <span>六月 01, 2018</span>
+            
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/个人/">个人</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/生活/">生活</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/记录/">记录</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <p><img src="/article-img/TCP四次挥手/a.jpg" alt=""></p>
+<h2 id="什么是四次挥手？"><a href="#什么是四次挥手？" class="headerlink" title="什么是四次挥手？"></a>什么是四次挥手？</h2><p>所谓四次挥手，即终止TCP连接，就是指断开一个TCP连接时，需要客户端和服务端总共发送四个包以确认连接的断开。</p>
+<p>由于TCP连接时全双工的，什么是全双工？就是指通信允许数据同时在两个方向上传输；因此，每个方向都必须要单独进行关闭，这一原则是当一方完成数据发送任务后，发送一个FIN来终止这一方向的连接，收到一个FIN只是意味着这一方向上没有数据流动了，即不会再收到数据了，但是在这个TCP连接上仍然能够发送数据，直到这一方向也发送了FIN。首先进行关闭的一方将执行主动关闭，而另一方则执行被动关闭 。</p>
+<h2 id="四次挥手的过程"><a href="#四次挥手的过程" class="headerlink" title="四次挥手的过程"></a>四次挥手的过程</h2><ol>
+<li>第一次挥手：客户端将标志位FIN置为1， ACK置为1，seq = u，它等于前面已经传送过的数据的最后一个字节的序号 + 1，并将该报文段发送给服务器，客户端进入FIN_WAIT-1（终止等待1）状态，等待服务器的确认；</li>
+<li>第二次挥手：服务器收到数据包后由标志位FIN = 1知道客户端需要释放连接，服务器将ACK置为1，ack = u + 1，随机生成seq = v，并将该数据包发送给客户端，服务器进入CLOSE-WAIT（关闭等待状态），客户端收到服务器的确认后，进入FIN-WAIT-2（终止等待2）状态。此时，客户端到服务器这个方向的连接就释放了，这时的TCP处于半关闭状态，即客户端已经没有数据要发送了，但是服务器要发送数据，客户端仍要接收，也就是说，服务器到客户端这个方向的连接并未关闭，这个状态可能会持续一段时间；</li>
+<li>第三次挥手：如果服务器已经没有要先客户端发送的数据，也需要释放TCP连接；服务器将标志位FIN置为1，ACK置为1，且seq = w（在半关闭状态下服务器可能又发送了一些数据），ack = u + 1，然后发送出去用来关闭服务器客户端的数据传送，服务器进入LAST-ACK（最后确认）状态；</li>
+<li>第四次挥手：客户端在收到服务器的FIN后，将标志位ACK置为1，ack = w + 1，seq = u + 1，然后对服务器发出确认，进入到TIME-WAIT（时间等待）状态；</li>
+</ol>
+<p>TCP四次挥手过程示意图如下<em>（图来源于网络）</em>：</p>
+<p><img src="/article-img/TCP四次挥手/b.png" alt=""></p>
+<p><img src="/article-img/TCP四次挥手/p.png" alt=""></p>
+<h2 id="学习疑问"><a href="#学习疑问" class="headerlink" title="学习疑问"></a>学习疑问</h2><h4 id="1-四次挥手能够合并为三次握手？即第二第三次挥手合并成一次？"><a href="#1-四次挥手能够合并为三次握手？即第二第三次挥手合并成一次？" class="headerlink" title="1. 四次挥手能够合并为三次握手？即第二第三次挥手合并成一次？"></a>1. 四次挥手能够合并为三次握手？即第二第三次挥手合并成一次？</h4><p>说实话，这里我仍然存在着疑问，网上答案普遍都说不能，但我通过抓包却能抓到只有三个挥手包的情况，即第二第三个合并成了一个， 我把这个问题和我目前的想法记录下来，希望大家也能告诉我你们的答案；</p>
+<blockquote>
+<p>原因1：</p>
+</blockquote>
+<p> 当关闭连接时，当收到对方的FIN报文时，仅仅表示对方不再发送数据了但是还能接收数据，但是己方可能还有对应的数据报文需要继续发送，因此己方需要先发送ACK报文，给对方一个确认，这样对方便不会因为没有收到应答而继续发送断开连接的请求，即FIN报文；当己方全部数据已经发送完需要断开时，再去给对方发送FIN报文段；</p>
+<p>这个是网上比较普遍的说法；</p>
+<p><strong>但如果此时己方也没有数据需要继续发送呢？</strong> <a href="https://zhuanlan.zhihu.com/p/35768805" target="_blank" rel="noopener">车小胖的回答</a>提供了另外一个思路：</p>
+<blockquote>
+<p>原因2：</p>
+</blockquote>
+<p> TCP不是通信的全部，他服务于应用层，需要和应用进程进行互动，把对端的数据，命令反馈给应用进程，并随时接收本地应用的数据及相关命令，所以关闭连接也需要听从应用进程的意图，当己方<strong>收到断开连接请求，需要咨询并发消息给应用进程，消息内容：对方要断开连接，请问您老人家还有数据要发送吗？如果有数据请告知，没有数据也请告知！然后就是等待application 的回应。既然需要等待application的回复，为何不早点把对client FIN 的ACK发出去呢？</strong> 所以TCP收到对方的断开连接请求，立马发ACK予以确认 ；</p>
+<p><img src="/article-img/TCP四次挥手/p.png" alt=""></p>
+<h4 id="2-第二次挥手的时候已经将FIN-1-ACK-1；为什么第三次挥手的时候还要ACK位置为1？"><a href="#2-第二次挥手的时候已经将FIN-1-ACK-1；为什么第三次挥手的时候还要ACK位置为1？" class="headerlink" title="2. 第二次挥手的时候已经将FIN=1, ACK=1；为什么第三次挥手的时候还要ACK位置为1？"></a>2. 第二次挥手的时候已经将FIN=1, ACK=1；为什么第三次挥手的时候还要ACK位置为1？</h4><p>首先，RFC793明确规定，除了第一个握手报文SYN除外，其它所有报文必须将ACK = 1。</p>
+<p>RFC这么规定，其背后的意义是什么呢？为什么要这样规定呢？</p>
+<p>我们要知道，TCP作为一个可靠传输协议，其可靠性就是依赖于收到对方的数据，ACK对方，这样对方就可以释放缓存的数据，因为对方确信数据已经被接收到了。</p>
+<p>但TCP报文是在IP网络上传输，丢包是家常便饭，接收方<strong>要抓住一切的机会，把消息告诉发送方</strong>。最方便的方式就是，任何我方发送的TCP报文，都要捎带着ACK状态位。</p>
+<p><img src="/article-img/TCP四次挥手/p.png" alt=""></p>
+<h4 id="3-TCP四次挥手后，TIME-WAIT状态存在的必要性"><a href="#3-TCP四次挥手后，TIME-WAIT状态存在的必要性" class="headerlink" title="3. TCP四次挥手后，TIME-WAIT状态存在的必要性"></a>3. TCP四次挥手后，TIME-WAIT状态存在的必要性</h4><p>在我学习的过程中，也有这个疑问——挥手过程中，主动关闭方在发送完最后一次挥手报文后，为什么要进入TIME-WAIT状态，直接CLOSED可以吗？</p>
+<p>答案是NO；</p>
+<p>TIME-WAIT必须存在的两点原因：</p>
+<ol>
+<li><strong>可靠的终止TCP连接</strong> ：<ul>
+<li>若处于TIME_WAIT的客户端发送给服务器确认报文段丢失的话，服务器将在此重新发送FIN报文段，那么客户端必须处于一个可接收的状态就是TIME_WAIT而不是close状态。 </li>
+</ul>
+</li>
+<li><strong>保证迟来的TCP报文段有足够的时间被识别并丢弃</strong> <ul>
+<li>如果Client直接CLOSED，然后又再向Server发起一个新连接，我们不能保证这个新连接与刚关闭的连接的端口号是不同的。也就是说有可能新连接和老连接的端口号是相同的。 这种情况之下：如果前一次连接的某些数据仍然滞留在网络中，这些延迟数据在建立新连接之后才到达Server，由于新连接和老连接的端口号是一样的， TCP协议就认为那个延迟的数据是属于新连接的，这样就和真正的新连接的数据包发生混淆了。 而TIME-WAIT的持续时间是2MSL，MSL是最长报文寿命，因而保证旧的数据可以被丢弃。</li>
+</ul>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇文章总结了TCP四次挥手过程中的一些知识点，同时也记录了我个人在学习这一块时所遇到的一些小疑问，我要谢谢知乎上的各位前辈，他们的回答在某些方面给我提供了不同的理解思路，让我能够更加全面地认识问题；</p>
+<p>最后，如果文章中有表述不清或者理解错误的地方，希望大家给我留言指出我的错误，我也会及时更正文章，以更好地和大家一起学习进步，同时也希望这篇文章能够帮到一些在学习中和我有同样疑问的同学。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://www.zhihu.com/question/50646354" target="_blank" rel="noopener">TCP中断可以用3次挥手吗？车小胖的回答</a></li>
+<li><a href="http://blog.51cto.com/10810512/1834489" target="_blank" rel="noopener">tcp四次挥手中的time_wait状态</a></li>
+<li><a href="https://tools.ietf.org/html/rfc793" target="_blank" rel="noopener">RFC: 793文档</a></li>
+<li><a href="https://item.jd.com/12025317.html" target="_blank" rel="noopener">《计算机网络（第7版） 》(谢希仁)</a>  </li>
+<li><a href="https://www.zhihu.com/question/271701044/answer/398114686" target="_blank" rel="noopener">关于三次握手和四次挥手，面试官想听到怎样的回答？</a> </li>
+</ol>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title='0' data-url='http://link.hhtjim.com/163/5146554.mp3'></li>
+                    
+                        <li title='1' data-url='http://link.hhtjim.com/qq/001faIUs4M2zna.mp3'></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+        data-ae='true'
+        data-ci='a26a05530183d2e79aa9'
+        data-cs='c2af8561ca91dddff6b07ed0a55429dc2e230f60'
+        data-r='Tulyon.github.io'
+        data-o='Tulyon'
+        data-a='Tulyon'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>

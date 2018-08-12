@@ -11,9 +11,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="你好，请多指教。
-
-"> 
+    <meta name="description" content="
+什么是三次握手？TCP建立连接的过程叫做握手，三次握手，指的是TCP在建立连接的过程中客户端和服务器之间交换了三个报文段。规范文档表述为 “ three way handshake ” ，准确来说,"> 
     <meta name="author" content="John Doe"> 
     <link rel="alternative" href="atom.xml" title="" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -64,6 +63,7 @@
         <div class="content markdown">
             <p><img src="/article-img/TCP三次握手/a.png" alt=""></p>
 <h2 id="什么是三次握手？"><a href="#什么是三次握手？" class="headerlink" title="什么是三次握手？"></a>什么是三次握手？</h2><p>TCP建立连接的过程叫做握手，三次握手，指的是TCP在建立连接的过程中客户端和服务器之间交换了三个报文段。规范文档表述为 “ three way handshake ” ，准确来说是三步握手，指的是一次握手过程中交换了三个报文，而不是进行了三次握手，所以谢希仁《计算机网络》第七版采用了 “ 三报文握手 “ ；</p>
+<p><img src="/article-img/TCP三次握手/p.png" alt=""></p>
 <h2 id="三次握手的过程"><a href="#三次握手的过程" class="headerlink" title="三次握手的过程"></a>三次握手的过程</h2><ol>
 <li><p>第一次握手：客户端将标志位SYN置为1，随机产生一个值seq=j，并将该报文段发送给服务器，Client进入SYN_SENT状态，等待服务器确认；</p>
 </li>
@@ -75,6 +75,7 @@
 </ol>
 <p><img src="/article-img/TCP三次握手/b.png" alt=""></p>
 <p>网上有很多帮助理解TCP三次握手的说明例子，而且描述得都比较生动易懂，如：<a href="https://www.zhihu.com/question/24853633" target="_blank" rel="noopener">TCP 为什么是三次握手，而不是两次或四次？</a> ,所以这篇文章并不作过多的例子描述说明；</p>
+<p><img src="/article-img/TCP三次握手/p.png" alt=""></p>
 <h2 id="为什么需要三次握手，而不是两次？四次？"><a href="#为什么需要三次握手，而不是两次？四次？" class="headerlink" title="为什么需要三次握手，而不是两次？四次？"></a>为什么需要三次握手，而不是两次？四次？</h2><h3 id="为什么不是两次握手？"><a href="#为什么不是两次握手？" class="headerlink" title="为什么不是两次握手？"></a>为什么不是两次握手？</h3><p>关于这个问题，谢希仁《计算机网络》第七版中讲，三次握手过程中的第三次发送确认报文段，其目的是为了防止已失效的连接请求报文突然又传到了服务器，因而产生了错误。而很多资料也都说到，三次握手的第三次其目的是为了解决网络中存在延迟的重复分组。虽然各自的表述不同，但本质却是同一个问题；</p>
 <p>谢希仁版的《计算机网络》中描述了这么一种情况，客户端发出的第一个请求连接报文段并没有丢失，而是在某个网络节点长时间滞留了，以致延误到连接释放以后的某个时间才到达服务器，本来这是一个早已失效的报文段。但服务器收到此失效的连接请求报文段后，就误认为是客户端再次发出的一个新的连接请求。于是就向客户端发出确认报文段，同意建立连接。假设不采用“三次握手”，那么只要服务器发出确认，新的连接就建立了。由于现在客户端并没有发出建立连接的请求，因此不会理睬服务器的确认，也不会向服务器发送数据。但服务器却以为新的运输连接已经建立，并一直等待客户端发来数据。这样，服务器的很多资源就白白浪费掉了。采用“三次握手”的办法可以防止上述现象发生。例如刚才那种情况，客户端不会向服务器的确认发出确认。服务器由于收不到确认，就知道client并没有要求建立连接。 </p>
 <p>上述例子很好的说明了第三次握手的必要性，那么为什么不是四五六七次？</p>
@@ -90,6 +91,24 @@
 <p><strong>所以三次握手不是TCP本身的要求，而是为了满足 ” 在不可靠信道上实现可靠地传输信息 ” 这一需求所导致的，这是一个本质需求——信道不可靠，但是我们传输信息要可靠；</strong> ”</p>
 <p>三次通信达到后，那后面是想接着握手确认也好，直接发送数据也好，都可以；越多次数的握手确认，传输可靠性就会越高，但是传输效率就下降了；</p>
 <p>我个人比较赞同这个说法，在这个的理解基础上，我总结概述为：任何一次握手都无法保证报文段一定会被成功送到，所以实际上，我们不是要解决消除这个问题，而是要将其降到可接受的程度，所以我们采用了最小次数——3次，而不是45678次。</p>
+<p><img src="/article-img/TCP三次握手/p.png" alt=""></p>
+<h2 id="学习疑问"><a href="#学习疑问" class="headerlink" title="学习疑问"></a>学习疑问</h2><h4 id="1-三次握手的第一次可以携带数据吗？为何？"><a href="#1-三次握手的第一次可以携带数据吗？为何？" class="headerlink" title="1. 三次握手的第一次可以携带数据吗？为何？"></a>1. 三次握手的第一次可以携带数据吗？为何？</h4><p>不可以，因为三次握手还没有完成</p>
+<h4 id="2-对方难道不可以将数据缓存下来，等握手成功再提交给app？"><a href="#2-对方难道不可以将数据缓存下来，等握手成功再提交给app？" class="headerlink" title="2. 对方难道不可以将数据缓存下来，等握手成功再提交给app？"></a>2. 对方难道不可以将数据缓存下来，等握手成功再提交给app？</h4><p>这样的话会牵扯并放大一个安全性问题——SYN FLOOD攻击；</p>
+<h4 id="什么是SYN-FLOOD攻击？"><a href="#什么是SYN-FLOOD攻击？" class="headerlink" title="什么是SYN FLOOD攻击？"></a>什么是SYN FLOOD攻击？</h4><p>SYN Flood (SYN洪水) 是种典型的DoS (Denial of Service，拒绝服务) 攻击。效果就是服务器TCP连接资源耗尽，停止响应正常的TCP连接请求。 </p>
+<p>当开放了一个TCP端口后，该端口就处于Listening状态，不停地监视发到该端口的Syn报文，一 旦接收到Client发来的Syn报文，就需要为该请求分配一个TCB（Transmission Control Block）， 不同的操作系统TCB的大小也不同，此外还返回一个ACK报文并随即将状态转为半开连接状态；</p>
+<p>如果恶意的向某个服务器端口发送大量的SYN包，则可以使服务器打开大量的半开连接，分配TCB，从而消耗大量的服务器资源，同时也使得正常的连接请求无法被相应。 </p>
+<p>回到上一个问题，如果攻击者伪造了成千上万的握手报文或者控制大量的肉鸡，携带了1K+ 字节的数据，而接收方会开辟大量的缓存来容纳这些巨大数据，内存会很容易耗尽，从而拒绝服务。 </p>
+<h4 id="如何防御SYN-FLOOD攻击"><a href="#如何防御SYN-FLOOD攻击" class="headerlink" title="如何防御SYN FLOOD攻击"></a>如何防御SYN FLOOD攻击</h4><p><strong>1． 无效连接监视释放</strong>      这种方法不停监视系统的半开连接和不活动连接，当达到一定阈值时拆除这些连接，从而释放系统资源。这种方法对于所有的连接一视同仁，而且由于SYN Flood造成的半开连接数量很大，正常连接请求也被淹没在其中被这种方式误释放掉，因此这种方法属于入门级的SYN Flood方法。 </p>
+<p><strong>2． 延缓TCB分配方法</strong>       从前面SYN Flood原理可以看到，消耗服务器资源主要是因为当SYN数据报文一到达，系统立即分配TCB，从而占用了资源。而SYN Flood由于很难建立起正常连接，因此，当正常连接建立起来后再分配TCB则可以有效地减轻服务器资源的消耗。常见的方法是使用Syn Cache和Syn Cookie技术。 </p>
+<p><img src="/article-img/TCP三次握手/p.png" alt=""></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我个人觉得TCP是一块比较复杂的内容，牵扯到的问题比较多，而且我个人觉得一些书籍或者搜索引擎上的资料有些地方描述得不是很清楚，所以只有不断地自己一遍又一遍理解总结，将自己遇到的一些问题记录下来，在解决一个问题的过程中我又会遇到另外一些可以说是完全陌生的问题，于是我只有需要不断得去理解掌握这些新的知识点，那么在这里将自己学习的一些总结分享给大家，希望能帮助到有需要的同学。</p>
+<p>最后，如果文章中有什么表述不清或者理解错误的地方，也希望大家能够给我留言指出我的错误，我也会及时更正文章，以更好地和大家一起学习进步。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="https://www.zhihu.com/question/24853633" target="_blank" rel="noopener">TCP 为什么是三次握手，而不是两次或四次？</a></li>
+<li><a href="https://groups.google.com/forum/#!msg/pongba/kF6O7-MFxM0/5S7zIJ4yqKUJ" target="_blank" rel="noopener">TCP建立连接为什么是三次握手？ </a> </li>
+<li><a href="https://item.jd.com/12025317.html" target="_blank" rel="noopener">《计算机网络（第7版） 》(谢希仁)</a>  </li>
+<li><a href="https://www.cnblogs.com/hubavyn/p/4477883.html" target="_blank" rel="noopener">SYN Flood攻击及防御方法 (转)</a></li>
+</ol>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
