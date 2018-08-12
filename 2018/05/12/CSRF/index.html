@@ -11,8 +11,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="
-什么是三次握手？TCP建立连接的过程叫做握手，三次握手，指的是TCP在建立连接的过程中客户端和服务器之间交换了三个报文段。规范文档表述为 “ three way handshake ” ，准确来说,"> 
+    <meta name="description" content="你好，请多指教。
+
+"> 
     <meta name="author" content="John Doe"> 
     <link rel="alternative" href="atom.xml" title="" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -135,15 +136,19 @@
 <p><img src="/article-img/csrf/ssp.png" alt=""></p>
 <p>在我学习的过程中，这里存在着三个问题：</p>
 <ol>
-<li><h5 id="刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；"><a href="#刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；" class="headerlink" title="刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；"></a>刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；</h5><p>我们要知道虽然攻击者利用了我们的cookie，但他仅仅只是借助浏览器来给他伪造的请求加上cookie，由于同源策略的限制，他并不能获取到cookie的内容；简而言之，攻击者只能使用它，却不知道它是什么；</p>
+<li><p><em>刚刚你不是说攻击者可以利用我们的cookie吗？还把值写进cookie中，这样攻击者不久知道了吗？</em></p>
+<p>同样这个问题也是对csrf攻击的本质以及跨域问题不了解所导致的；</p>
+<p>我们要知道虽然攻击者利用了我们的cookie，但他仅仅只是借助浏览器来给他伪造的请求加上cookie，由于同源策略的限制，他并不能获取到cookie的内容；简而言之，攻击者只能使用它，却不知道它是什么；</p>
 </li>
 </ol>
 <ol start="2">
-<li><h5 id="既然攻击者不知道token是多少，那他自己随机生成一个，把form和cookie中的token值换成他自己的，这样不也可以吗？"><a href="#既然攻击者不知道token是多少，那他自己随机生成一个，把form和cookie中的token值换成他自己的，这样不也可以吗？" class="headerlink" title="既然攻击者不知道token是多少，那他自己随机生成一个，把form和cookie中的token值换成他自己的，这样不也可以吗？"></a>既然攻击者不知道token是多少，那他自己随机生成一个，把form和cookie中的token值换成他自己的，这样不也可以吗？</h5><p>这个问题还是对同源策略不理解所造成的，和问题1类似，由于同源策略的限制，攻击者最多也只能在他的恶意网站上伪造一个form并随便填入一个token，但却不能读写目标网站的cookie值，既不能读又不能写cookie，胡乱猜一个form表单的token又有什么用呢？所以也无法实施攻击；</p>
+<li><p><em>既然攻击者不知道token是多少，那他自己随机生成一个，把form和cookie中的token值换成他自己的，这样不也可以吗？</em></p>
+<p>这个问题还是对同源策略不理解所造成的，和问题1类似，由于同源策略的限制，攻击者最多也只能在他的恶意网站上伪造一个form并随便填入一个token，但却不能读写目标网站的cookie值，既不能读又不能写cookie，胡乱猜一个form表单的token又有什么用呢？所以也无法实施攻击；</p>
 </li>
 </ol>
 <ol start="3">
-<li><p><strong>既然你说到同源策略，浏览器同源策略的目的就是为了防止跨域，那你这个csrf还怎么还能进行跨站请求呢？同源策略不会把它给拦住吗？其实这里存在着一个对同源策略的误解，包括我看网上的一些资料，都说到同源策略就是限制住让客户端不能发送请求，这是不对的！</strong></p>
+<li><p><em>既然你说到同源策略，浏览器同源策略的目的就是为了防止跨域，那你这个csrf还怎么还能进行跨站请求呢？同源策略不会把它给拦住吗？</em></p>
+<p>其实这里存在着一个对同源策略的误解，包括我看网上的一些资料，都说到同源策略就是限制住让客户端不能发送请求，这是不对的！</p>
 <p>同源策略下，浏览器仍然能够正常跨域发送请求，服务器也仍然能够正常处理请求并返回响应，只是返回结果被浏览器给拦截住了，并不是说不能够发送请求；</p>
 <p><strong>很显然，这对于csrf攻击来说，就已经足够了；</strong></p>
 </li>

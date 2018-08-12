@@ -11,8 +11,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="
-什么是三次握手？TCP建立连接的过程叫做握手，三次握手，指的是TCP在建立连接的过程中客户端和服务器之间交换了三个报文段。规范文档表述为 “ three way handshake ” ，准确来说,"> 
+    <meta name="description" content="你好，请多指教。
+
+"> 
     <meta name="author" content="John Doe"> 
     <link rel="alternative" href="atom.xml" title="" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -35,7 +36,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="icon-home image-icon" href="javascript:;"></a>
     <div title="播放/暂停" class="icon-play"></div>
-    <h3 class="subtitle">cookie与webStorage的区别</h3>
+    <h3 class="subtitle">Cookie与WebStorage的区别</h3>
     <div class="social">
         <!--<div class="like-icon">-->
             <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
@@ -52,7 +53,7 @@
     <div class="section">
         <div class="article">
     <div class='main'>
-        <h1 class="title">cookie与webStorage的区别</h1>
+        <h1 class="title">Cookie与WebStorage的区别</h1>
         <div class="stuff">
             <span>三月 11, 2018</span>
             
@@ -62,7 +63,7 @@
         </div>
         <div class="content markdown">
             <p><img src="/article-img/cookie与webstorage/a.jpg" alt=""></p>
-<h2 id="一-所解决的问题不一样"><a href="#一-所解决的问题不一样" class="headerlink" title="一  所解决的问题不一样"></a>一  所解决的问题不一样</h2><h3 id="1-cookie："><a href="#1-cookie：" class="headerlink" title="1. cookie："></a>1. cookie：</h3><p>在讨论cookie之前，我们先来要了解一下HTTP——HTTP是一个无连接，无状态协议；</p>
+<h3 id="一-所解决的问题不一样"><a href="#一-所解决的问题不一样" class="headerlink" title="一  所解决的问题不一样"></a>一  所解决的问题不一样</h3><h3 id="1-cookie："><a href="#1-cookie：" class="headerlink" title="1. cookie："></a>1. cookie：</h3><p>在讨论cookie之前，我们先来要了解一下HTTP——HTTP是一个无连接，无状态协议；</p>
 <p>于是问题来了：</p>
 <h4 id="TCP是面向连接的，HTTP基于TCP却是无连接的？"><a href="#TCP是面向连接的，HTTP基于TCP却是无连接的？" class="headerlink" title="TCP是面向连接的，HTTP基于TCP却是无连接的？"></a>TCP是面向连接的，HTTP基于TCP却是无连接的？</h4><blockquote>
 <p>网上说法<a href="https://blog.csdn.net/tennysonsky/article/details/44562435" target="_blank" rel="noopener">如何理解HTTP协议的 “无连接，无状态” 特点？</a></p>
@@ -94,6 +95,7 @@
 <h3 id="sessionStorage-和-localStorage："><a href="#sessionStorage-和-localStorage：" class="headerlink" title="sessionStorage 和 localStorage："></a>sessionStorage 和 localStorage：</h3><p>web的发展使得客户端存储使用得越来越多，最简单且兼容性最好的方案是cookie，但是作为真正的客户端存储，cookie的许多特点也成了它在这方面的致命伤；且ie6的userdata，火狐的globalStorage，以及Flash localStorage等这几种方式存在着很大的兼容性问题；</p>
 <p>因此，为了解决上述问题，H5给出了更加理想的方案：webStroage，即sessionStorage和localStorage；</p>
 <p>这是第一点，他们所提出的场景不一样，所解决的问题不一样；</p>
+<p><img src="/article-img/cookie与webstorage/sp.png" alt=""></p>
 <h3 id="二-生命周期，数据大小，网络通信等的不同"><a href="#二-生命周期，数据大小，网络通信等的不同" class="headerlink" title="二 生命周期，数据大小，网络通信等的不同"></a>二 生命周期，数据大小，网络通信等的不同</h3><p>下面的表格是这三者的一些常见比较</p>
 <table>
 <thead>
@@ -125,6 +127,7 @@
 </tr>
 </tbody>
 </table>
+<p><img src="/article-img/cookie与webstorage/sp.png" alt=""></p>
 <h3 id="三-应用的场景不一样"><a href="#三-应用的场景不一样" class="headerlink" title="三 应用的场景不一样"></a>三 应用的场景不一样</h3><p>理解这三者各自的特点之后，我们还需要正确地去使用它们</p>
 <table>
 <thead>
@@ -148,6 +151,7 @@
 </tr>
 </tbody>
 </table>
+<p><img src="/article-img/cookie与webstorage/sp.png" alt=""></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这篇文章总结了cookie与webStorage一些常见的区别，但是和其他一些文章不同的是，为了更加深入地理解问题，我还稍微总结了一下cookie与webStorage各自是在什么情况下被提出的，我觉得这点也是比较重要的，理解它们为了解决什么样的问题而产生，能帮助我们学习其背后的一些思想，提高我们考虑问题的格局；</p>
 <p>文章中如果有表述不清或理解错误的地方，也希望大家能够给我留言指出我的错误，帮助我更加正确地认识问题，同时我也会及时更正博客，希望能帮助更多有需要的人！</p>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
