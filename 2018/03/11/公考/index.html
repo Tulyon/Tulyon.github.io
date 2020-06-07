@@ -36,7 +36,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="icon-home image-icon" href="javascript:;"></a>
     <div title="播放/暂停" class="icon-play"></div>
-    <h3 class="subtitle">Cookie与WebStorage的区别</h3>
+    <h3 class="subtitle">马原图拉扬结对一星期总结</h3>
     <div class="social">
         <!--<div class="like-icon">-->
             <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
@@ -53,7 +53,7 @@
     <div class="section">
         <div class="article">
     <div class='main'>
-        <h1 class="title">Cookie与WebStorage的区别</h1>
+        <h1 class="title">马原图拉扬结对一星期总结</h1>
         <div class="stuff">
             <span>三月 11, 2018</span>
             
@@ -62,104 +62,25 @@
 
         </div>
         <div class="content markdown">
-            <p><img src="/article-img/cookie与webstorage/a.jpg" alt=""></p>
-<h3 id="一-所解决的问题不一样"><a href="#一-所解决的问题不一样" class="headerlink" title="一  所解决的问题不一样"></a>一  所解决的问题不一样</h3><h3 id="1-cookie："><a href="#1-cookie：" class="headerlink" title="1. cookie："></a>1. cookie：</h3><p>在讨论cookie之前，我们先来要了解一下HTTP——HTTP是一个无连接，无状态协议；</p>
-<p>于是问题来了：</p>
-<h4 id="TCP是面向连接的，HTTP基于TCP却是无连接的？"><a href="#TCP是面向连接的，HTTP基于TCP却是无连接的？" class="headerlink" title="TCP是面向连接的，HTTP基于TCP却是无连接的？"></a>TCP是面向连接的，HTTP基于TCP却是无连接的？</h4><blockquote>
-<p>网上说法<a href="https://blog.csdn.net/tennysonsky/article/details/44562435" target="_blank" rel="noopener">如何理解HTTP协议的 “无连接，无状态” 特点？</a></p>
-</blockquote>
+            <p><img src="/article-img/GK/cover1.jpg" alt=""></p>
+<h2 id="胡扯"><a href="#胡扯" class="headerlink" title="胡扯"></a>胡扯</h2><p>今天是2020年六月七日，和马原组成公考对子一星期了，做了三套题，也都分别分析了这三套题中存在疑惑的地方，为了我们能更好进步，携手上岸，所以就有了这篇总结。</p>
+<p>这篇总结将分成以下三个部分：</p>
+<ol>
+<li>方奕卓篇</li>
+<li>马原篇</li>
+<li>全过程总结篇</li>
+</ol>
+<h2 id="方奕卓篇"><a href="#方奕卓篇" class="headerlink" title="方奕卓篇"></a>方奕卓篇</h2><p>总结过去一星期，我还存在着较多的问题，分为两大块：</p>
 <ul>
-<li>无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间。 </li>
-<li>早期这么做的原因是 HTTP 协议产生于互联网，因此服务器需要处理同时面向全世界数十万、上百万客户端的网页访问，但每个客户端（即浏览器）与服务器之间交换数据的间歇性较大（即传输具有突发性、瞬时性），并且网页浏览的联想性、发散性导致两次传送的数据关联性很低，大部分通道实际上会很空闲、无端占用资源。因此 HTTP 的设计者有意利用这种特点将协议设计为请求时建连接、请求完释放连接，以尽快将资源释放出来服务其他客户端。 </li>
+<li>套卷模块</li>
+<li>学习模块</li>
 </ul>
-<blockquote>
-<p>我的理解</p>
-</blockquote>
-<ul>
-<li><p>上述的说法我个人觉得更像是短链接的含义，而非无连接；</p>
-<p>我认为无连接指的就是通信双方在交换HTTP报文的时候<strong>不需要先建立所谓的HTTP连接</strong>，这句话在谢希仁第七版《计算机网络》中同样被提及；</p>
-</li>
-<li><p>HTTP正是因为借助了底层的TCP作为传输层协议，保证了数据的可靠传输，所以HTTP不需要再考虑如何连接，数据如何传送，信道可靠不可靠的等这些问题；如果一个会话需要多个层级的连接，那它必然会造成延迟大，资源浪费等问题，我认为这是不合理的；所以说如果一个层级已经提供了可靠连接，则在它之上或者说基于它的层级完全没有必要连接，只需要使用这个层级来交流数据即可，如这里的HTTP；</p>
-</li>
+<p>套卷模块包括了做套卷过程中所存在的种种问题，而学习模块则指的是平常的学习生活中所存在的问题。</p>
+<h3 id="套卷模块"><a href="#套卷模块" class="headerlink" title="套卷模块"></a>套卷模块</h3><p>经总结，坐套卷过程中存在以下问题，按严重程度排序：</p>
+<ol>
+<li>做题速度慢，主要体现在：<ul>
+<li></li>
 </ul>
-<h4 id="如何理解无状态？"><a href="#如何理解无状态？" class="headerlink" title="如何理解无状态？"></a>如何理解无状态？</h4><p><a href="https://www.zhihu.com/question/23202402/answer/300614865" target="_blank" rel="noopener">HTTP是一个无状态的协议。这句话里的无状态是什么意思？ - 陈清和的回答 - 知乎</a> 举了一个很生动的例子：</p>
-<p>有状态：<br>A：你今天中午吃的啥？<br>B：吃的大盘鸡。<br>A：味道怎么样呀？<br>B：还不错，挺好吃的。</p>
-<p>无状态：<br>A：你今天中午吃的啥？<br>B：吃的大盘鸡。<br>A：味道怎么样呀？<br>B：？？？啊？啥？啥味道怎么样？</p>
-<p><strong>无状态</strong>是指协议对于事务处理没有记忆能力，服务器不知道正在与之交互的客户端是什么状态，即我们给服务器发送一个HTTP请求之后，服务器根据请求给我们返回数据，但是发送完之后，客户端与服务器在这次会话中所产生的数据不会被保留，这也就意味着每个请求都是<strong>独立</strong>的，对同一个url请求没有上下文关系。</p>
-<p>于是针对HTTP协议的这些特点及所存在的问题，网景公司于1993年提出并逐渐规范化了cookie这个概念；</p>
-<p>带cookie之后：</p>
-<p>A：今天中午吃了啥？</p>
-<p>B：吃了大盘鸡；</p>
-<p>A：<strong>你今天中午吃的大盘鸡</strong>味道怎么样？</p>
-<p>B：还不错，挺好吃的。</p>
-<h3 id="sessionStorage-和-localStorage："><a href="#sessionStorage-和-localStorage：" class="headerlink" title="sessionStorage 和 localStorage："></a>sessionStorage 和 localStorage：</h3><p>web的发展使得客户端存储使用得越来越多，最简单且兼容性最好的方案是cookie，但是作为真正的客户端存储，cookie的许多特点也成了它在这方面的致命伤；且ie6的userdata，火狐的globalStorage，以及Flash localStorage等这几种方式存在着很大的兼容性问题；</p>
-<p>因此，为了解决上述问题，H5给出了更加理想的方案：webStroage，即sessionStorage和localStorage；</p>
-<p>这是第一点，他们所提出的场景不一样，所解决的问题不一样；</p>
-<p><img src="/article-img/cookie与webstorage/sp.png" alt=""></p>
-<h3 id="二-生命周期，数据大小，网络通信等的不同"><a href="#二-生命周期，数据大小，网络通信等的不同" class="headerlink" title="二 生命周期，数据大小，网络通信等的不同"></a>二 生命周期，数据大小，网络通信等的不同</h3><p>下面的表格是这三者的一些常见比较</p>
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>cookie</th>
-<th>sessionStorage</th>
-<th style="text-align:left">localStorage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>生命周期</td>
-<td>可设置失效时间，默认是关闭浏览器后失效</td>
-<td>仅在当前会话（窗口/标签页）下有效，关闭页面或浏览器后被清除</td>
-<td style="text-align:left">除非被清除，否则永久保存</td>
-</tr>
-<tr>
-<td>存放数据大小</td>
-<td>4k左右</td>
-<td>5-10M</td>
-<td style="text-align:left">5-10M</td>
-</tr>
-<tr>
-<td>与服务器通信</td>
-<td>每次都会携带在HTTP头中，如果使用cookie保存过多数据会带来性能上的问题</td>
-<td>仅在客户端（即浏览器）中保存，不参与和服务器的通信</td>
-<td style="text-align:left">仅在客户端（即浏览器）中保存，不参与和服务器的通信</td>
-</tr>
-</tbody>
-</table>
-<p><img src="/article-img/cookie与webstorage/sp.png" alt=""></p>
-<h3 id="三-应用的场景不一样"><a href="#三-应用的场景不一样" class="headerlink" title="三 应用的场景不一样"></a>三 应用的场景不一样</h3><p>理解这三者各自的特点之后，我们还需要正确地去使用它们</p>
-<table>
-<thead>
-<tr>
-<th>方式</th>
-<th>应用场景</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>cookie</td>
-<td>1. 判断用户是否已登陆，记住登陆状态，下次自动登陆     2. 保存上次的登陆时间</td>
-</tr>
-<tr>
-<td>sessionStorage</td>
-<td>1. 多内容表单填写，为了优化体验，拆分成多个子页面引导用户填写，这时候就可以用 sessionStorage来暂存某些数据   2. 某些仅在当前窗口需要临时存储的数据</td>
-</tr>
-<tr>
-<td>localStorage</td>
-<td>1. H5游戏，会产生较多的本地数据    2. 接替cookie来管理购物车的工作</td>
-</tr>
-</tbody>
-</table>
-<p><img src="/article-img/cookie与webstorage/sp.png" alt=""></p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这篇文章总结了cookie与webStorage一些常见的区别，但是和其他一些文章不同的是，为了更加深入地理解问题，我还稍微总结了一下cookie与webStorage各自是在什么情况下被提出的，我觉得这点也是比较重要的，理解它们为了解决什么样的问题而产生，能帮助我们学习其背后的一些思想，提高我们考虑问题的格局；</p>
-<p>文章中如果有表述不清或理解错误的地方，也希望大家能够给我留言指出我的错误，帮助我更加正确地认识问题，同时我也会及时更正博客，希望能帮助更多有需要的人！</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
-<li><p><a href="https://www.zhihu.com/question/51996213/answer/128801185" target="_blank" rel="noopener">怎么理解TCP是面向连接的，HTTP基于TCP却是无连接的？</a> </p>
-</li>
-<li><p><a href="https://www.zhihu.com/question/23202402/answer/300614865" target="_blank" rel="noopener">HTTP是一个无状态的协议。这句话里的无状态是什么意思？</a> </p>
-</li>
-<li><p><a href="https://blog.csdn.net/tennysonsky/article/details/44562435" target="_blank" rel="noopener">如何理解HTTP协议的 “无连接，无状态” 特点？</a> </p>
 </li>
 </ol>
 
